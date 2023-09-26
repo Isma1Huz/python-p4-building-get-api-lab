@@ -20,19 +20,68 @@ def index():
 
 @app.route('/bakeries')
 def bakeries():
-    return ''
+    all_bakeries = Bakery.query.all()
+
+    datas = []
+    for item in all_bakeries:
+        data = {
+            'id': item.id,
+            'name': item.name,
+            'created_at': item.created_at,
+            'updated_at': item.updated_at
+        }
+        datas.append(data)
+    
+    return jsonify(datas)
 
 @app.route('/bakeries/<int:id>')
 def bakery_by_id(id):
-    return ''
+    byprice = Bakery.query.filter_by(id=id).first()
+    
 
-@app.route('/baked_goods/by_price')
-def baked_goods_by_price():
-    return ''
+    data = {
+        'id': byprice.id,
+        'name': byprice.name,
+        'created_at': byprice.created_at,
+        'updated_at': byprice.updated_at
+    }
+    all = make_response(jsonify(data))
+    return all
 
+
+@app.route('/baked_goods/by_price/<int:price>')
+def baked_goods_by_price(price):
+    byprice = BakedGood.query.filter(BakedGood.price == price).all()
+
+    data = []
+    for item in byprice:
+        data.append({
+            'id': item.id,
+            'name': item.name,
+            'price': item.price,
+            'created_at': item.created_at,
+            'updated_at': item.updated_at
+        })
+
+    response = make_response(
+        jsonify(data),
+        200
+    )
+    return response
+
+    
 @app.route('/baked_goods/most_expensive')
 def most_expensive_baked_good():
-    return ''
+    byprice = BakedGood.query.order_by(BakedGood.price.desc()).first()
 
+    data = {
+        'id': byprice.id,
+        'name': byprice.name,
+        'price': byprice.price,
+        'created_at': byprice.created_at,
+        'updated_at': byprice.updated_at
+    }
+    all = make_response(jsonify(data))
+    return all
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

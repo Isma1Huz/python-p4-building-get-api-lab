@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 
 from random import randint, choice as rc
-
 from faker import Faker
-
-from app import app
-from models import db, Bakery, BakedGood
+from app import app, db, Bakery, BakedGood
 
 fake = Faker()
 
 with app.app_context():
 
+    # Delete existing data
     BakedGood.query.delete()
     Bakery.query.delete()
     
@@ -34,7 +32,7 @@ with app.app_context():
 
         bg = BakedGood(
             name=name,
-            price=randint(1,10),
+            price=randint(1, 100),
             bakery=rc(bakeries)
         )
 
